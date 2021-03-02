@@ -7,14 +7,14 @@ module Api
         @customer = Customer.new(customers_params)
 
         if @customer.save
-          render json: { customer: @customer }, status: :created
+          render json: {}, status: :created
         else
           render json: { errors: @customer.errors.full_messages }, status: :unprocessable_entity
         end
       end
 
       def show
-        render json: { customer: @customer }
+        render json: CustomersSerializer.new(@customer).serialize
       end
 
       private
@@ -24,7 +24,7 @@ module Api
       end
 
       def load_customer
-        @customer = Customer.find_by(msisdn: params[:msisdn])
+        @customer = Customer.find_by!(msisdn: params[:msisdn])
       rescue ActiveRecord::RecordNotFound
         render json: { errors: ['customer not found'] }, status: :not_found
       end
