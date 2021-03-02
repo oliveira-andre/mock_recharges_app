@@ -18,7 +18,6 @@ ActiveRecord::Schema.define(version: 2021_03_01_231017) do
   create_table "cards", force: :cascade do |t|
     t.string "bin"
     t.string "last_digits"
-    t.string "token"
     t.integer "status", default: 0
     t.bigint "customer_id"
     t.datetime "created_at", precision: 6, null: false
@@ -38,6 +37,7 @@ ActiveRecord::Schema.define(version: 2021_03_01_231017) do
     t.bigint "customer_id"
     t.bigint "card_id"
     t.integer "amount"
+    t.string "token"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["card_id"], name: "index_recharges_on_card_id"

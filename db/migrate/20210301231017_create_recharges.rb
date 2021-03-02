@@ -4,6 +4,7 @@ class CreateRecharges < ActiveRecord::Migration[6.1]
       t.references :customer
       t.references :card
       t.integer :amount
+      t.string :token
 
       t.timestamps
     end
