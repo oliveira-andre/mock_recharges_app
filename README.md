@@ -1,24 +1,138 @@
-# README
+# Mock Recharges App
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Requests
 
-Things you may want to cover:
+### Customers
 
-* Ruby version
+<details>
+  <summary>Create</summary>
 
-* System dependencies
+  curl
+  ```
+  curl -kv -H 'content-type: application/json' -X 'POST' -d '{ "customer": { "fullname": "Andre Oliveira", "msisdn": "11999999999" } }' 'http://localhost:3000/api/v1/customers' | jq
+  ```
 
-* Configuration
+  success response code: `201 CREATED`
 
-* Database creation
+  response
+  ```json
+  {}
+  ```
 
-* Database initialization
+  error response code: `422 UNPROCESSABLE ENTITY`
 
-* How to run the test suite
+  error response
+  ```json
+  {
+    "errors": [
+      "Msisdn has already been taken"
+    ]
+  }
+  ```
+</details>
 
-* Services (job queues, cache servers, search engines, etc.)
+<details>
+  <summary>Show</summary>
 
-* Deployment instructions
+  curl
+  ```
+  curl -kv -H 'content-type: application/json' -X 'GET' 'http://localhost:3000/api/v1/customers/11999999999' | jq
+  ```
 
-* ...
+  success response code: `200 OK`
+
+  success response
+  ```json
+  {
+    "fullname": "Andre Oliveira",
+    "msisdn": "11999999999",
+    "cards": [
+      {
+        "bin": "440568",
+        "last_digits": "4407",
+        "status": "active"
+      },
+      {
+        "bin": "440568",
+        "last_digits": "4406",
+        "status": "denied"
+      }
+    ],
+    "history": [
+      {
+        "amount": 1000,
+        "token": "eyJhbGciOiJub25lIn0.eyJhbW91bnQiOjEwMDAsImNyZWF0ZWRfYXQiOiIyMDIxLTAzLTAyIDAyOjI2OjU0IFVUQyJ9."
+      }
+    ]
+  }
+  ```
+
+  error response code: `404 NOT FOUND`
+
+  error response
+  ```json
+  {
+    "errors": [
+      "customer not found"
+    ]
+  }
+  ```
+</details>
+
+### Cards
+
+<details>
+  <summary>Create</summary>
+
+  curl
+  ```
+  curl -kv -H 'content-type: application/json' -X 'POST' -d '{ "card": { "bin": "440568", "last_digits": "4407" } }' 'http://localhost:3000/api/v1/customers/11999999999/cards'
+  ```
+
+  success response code: `201 CREATED`
+
+  success response
+  ```json
+  {}
+  ```
+
+  error response code: `422 UNPROCESSABLE ENTITY`
+
+  error response
+  ```json
+  {
+    "errors": [
+      "Bin has already been taken"
+    ]
+  }
+  ```
+  </details>
+
+### Recharges
+
+<details>
+  <summary>Create</summary>
+
+  curl
+  ```
+  curl -kv -H 'content-type: application/json' -X 'POST' -d '{ "recharge": { "amount": 1000, "bin": "440568", "last_digits": "4407" } }' 'http://localhost:3000/api/v1/customers/11999999999/recharges'
+  ```
+
+  success response code: `201 CREATED`
+
+  success response
+  ```json
+  {}
+  ```
+
+  error response code: `422 UNPROCESSABLE ENTITY`
+
+  error response
+  ```json
+  {
+    "errors": [
+      "Card your card is blacklisted"
+    ]
+  }
+  ```
+  </details>
